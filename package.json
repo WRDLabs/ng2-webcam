@@ -8,7 +8,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://"
+    "url": "https://archik@bitbucket.org/archik/ng2-webcam.git"
+  },
+  "bugs": {
+    "url": ""
   },
   "keywords": ["ng2", "angular2", "getusermedia","webcam","video","gum"],
   "author": {
