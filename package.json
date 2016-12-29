@@ -1,0 +1,24 @@
+{
+  "name": "ng2-webcam",
+  "version": "1.0.0",
+  "description": "Angular2 webcam component. Based on getUserMedia.js ",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://"
+  },
+  "keywords": ["ng2", "angular2", "getusermedia","webcam","video","gum"],
+  "author": {
+    "name": "Artur Basak",
+    "email": "artur.basak@instinctools.ru"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/addyosmani/getUserMedia.js/blob/master/LICENSE-MIT"
+    }
+  ]
+}

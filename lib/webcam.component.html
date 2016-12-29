@@ -1,0 +1,4 @@
+<div id="webcam">
+    <video *ngIf="isSupportWebRTC" [src]="videoSrc"></video>
+    <object *ngIf="isFallback" id="XwebcamXobjectX"></object>
+</div>
