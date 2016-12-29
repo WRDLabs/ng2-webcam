@@ -92,7 +92,7 @@ const onError = (err) => {};
 ```
 
 Fallback implemented using ActionScript and for communication with this script You have to implement following external interface
-```
+```javascript
 window.webcam = {
   // .as script logging
   debug: function (a, b) {
