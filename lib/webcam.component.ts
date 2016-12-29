@@ -46,8 +46,8 @@ export class WebCamComponent implements OnInit, AfterViewInit {
     this.options.fallbackSrc = this.options.fallbackSrc || 'node_modules/ng2-webcam/lib/fallback/jscam_canvas_only.swf';
     this.options.fallbackMode = this.options.fallbackMode || 'callback';
     this.options.fallbackQuality = this.options.fallbackQuality || 85;
-    this.options.width = this.options.width || 500;
-    this.options.height = this.options.height || 500;
+    this.options.width = this.options.width || 320;
+    this.options.height = this.options.height || 240;
     // flash fallback detection
     this.isFallback = !this.isSupportWebRTC && !!this.options.fallbackSrc;
   }
@@ -57,7 +57,7 @@ export class WebCamComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * On webcam using native browser api
+   * On web camera using native browser api
    * @returns {any}
    */
   onWebRTC(): any {
@@ -132,7 +132,70 @@ export class WebCamComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * On flash fallback
+   * Create fallback dispatcher and call onSuccess
+   * @param cam - Flash web camera instance
+   * @returns {any}
+   */
+  createFallbackDispatcher(cam): any {
+    const dispatcher = {
+      capture: function (x) {
+        try {
+          return cam.capture(x);
+        } catch (e) {
+        }
+      },
+      save: function (x) {
+        try {
+          return cam.save(x);
+        } catch (e) {
+        }
+      },
+      setCamera: function (x) {
+        try {
+          return cam.setCamera(x);
+        } catch (e) {
+        }
+      },
+      getCameraList: function () {
+        try {
+          return cam.getCameraList();
+        } catch (e) {
+        }
+      }
+    };
+    this.onSuccess(dispatcher);
+  }
+
+  /**
+   * Add <param>'s into fallback object
+   * @param cam - Flash web camera instance
+   * @returns {any}
+   */
+  addFallbackParams(cam: any): any {
+    const paramFlashVars = document.createElement('param');
+    paramFlashVars.name = 'FlashVars';
+    paramFlashVars.value = 'mode=' + this.options.fallbackMode + '&amp;quality=' + this.options.fallbackQuality;
+    cam.appendChild(paramFlashVars);
+
+    const paramAllowScriptAccess = document.createElement('param');
+    paramAllowScriptAccess.name = 'allowScriptAccess';
+    paramAllowScriptAccess.value = 'always';
+    cam.appendChild(paramAllowScriptAccess);
+
+    // if (this.browser.appVersion.indexOf('MSIE') > -1) {
+    // if (isIE) {
+      cam.classid = 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000';
+      const paramMovie = document.createElement('param');
+      paramMovie.name = 'movie';
+      paramMovie.value = this.options.fallbackSrc;
+      cam.appendChild(paramMovie);
+    // } else {
+      cam.data = this.options.fallbackSrc;
+    // }
+  }
+
+  /**
+   * On web camera using flash fallback
    * .swf file is necessary
    * @returns {any}
    */
@@ -144,58 +207,12 @@ export class WebCamComponent implements OnInit, AfterViewInit {
       const cam = self.element.nativeElement.querySelector('#XwebcamXobjectX');
       cam.width = self.options.width;
       cam.height = self.options.height;
-
-      const paramFlashVars = document.createElement('param');
-      paramFlashVars.name = 'FlashVars';
-      paramFlashVars.value = 'mode=' + this.options.fallbackMode + '&amp;quality=' + this.options.fallbackQuality;
-      cam.appendChild(paramFlashVars);
-
-      const paramAllowScriptAccess = document.createElement('param');
-      paramAllowScriptAccess.name = 'allowScriptAccess';
-      paramAllowScriptAccess.value = 'always';
-      cam.appendChild(paramAllowScriptAccess);
-
-      // if (this.browser.appVersion.indexOf('MSIE') > -1) {
-      // if (isIE) {
-        cam.classid = 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000';
-        const paramMovie = document.createElement('param');
-        paramMovie.name = 'movie';
-        paramMovie.value = this.options.fallbackSrc;
-        cam.appendChild(paramMovie);
-      // } else {
-        cam.data = this.options.fallbackSrc;
-      // }
+      
+      this.addFallbackParams(cam);
 
       (function register(run) {
         if (cam.capture !== undefined) {
-          const dispather = {
-            capture: function (x) {
-              try {
-                return cam.capture(x);
-              } catch (e) {
-              }
-            },
-            save: function (x) {
-              try {
-                return cam.save(x);
-              } catch (e) {
-              }
-            },
-            setCamera: function (x) {
-              try {
-                return cam.setCamera(x);
-              } catch (e) {
-              }
-            },
-            getCameraList: function () {
-              try {
-                return cam.getCameraList();
-              } catch (e) {
-              }
-            }
-          };
-          self.onSuccess(dispather);
-
+          self.createFallbackDispatcher(cam);
         } else if (run === 0) {
           self.onError(new Error('Flash movie not yet registered!'));
         } else {

@@ -59,7 +59,21 @@ const onSuccess = () => {};
 const onError = (err) => {};
 ```
 
-Also You can extend flash fallback params
+You can capture image form webcam using following example
+```javascript
+...
+const video = <any>document.getElementsByTagName('video')[0];
+const canvas = <any>document.getElementsByTagName('canvas')[0];
+if (video) {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+}
+...
+```
+
+## Fallback (flash)
+Also You can extend options using flash fallback params
 
 ```javascript
 cont options = {
@@ -71,9 +85,55 @@ cont options = {
   fallbackSrc: '/node_modules/ng2-webcam/lib/fallback/jscam_canvas_only.swf',
   fallbackQuality: 85
 };
-const onSuccess = () => {};
+const onSuccess = (flashplayer) => {
+  self.flashplayer = flashplayer;
+};
 const onError = (err) => {};
 ```
+
+Fallback implemented using ActionScript and for communication with this script You have to implement following external interface
+```
+window.webcam = {
+  // .as script logging
+  debug: function (a, b) {
+     console.log(a, b);
+  },
+  // Capture event callback
+  onCapture: function () {
+    self.flashplayer.save();
+  },
+  // Before setInterval callback
+  onTick: function () {},
+  // Save event callback
+  onSave: function (data) {
+    try {
+      const win = <any>window;
+      let col = data.split(';'),
+        tmp = null,
+        w = self.options.width,
+        h = self.options.height;
+      for (let i = 0; i < w; i++) {
+        tmp = parseInt(col[i], 10);
+        win.app.imgData.data[win.app.pos + 0] = (tmp >> 16) & 0xff;
+        win.app.imgData.data[win.app.pos + 1] = (tmp >> 8) & 0xff;
+        win.app.imgData.data[win.app.pos + 2] = tmp & 0xff;
+        win.app.imgData.data[win.app.pos + 3] = 0xff;
+        win.app.pos += 4;
+      }
+
+      if (win.app.pos >= 4 * w * h) {
+        win.app.ctx.putImageData(win.app.imgData, 0, 0);
+        win.app.pos = 0;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+};
+
+self.flashplayer.capture();
+```
+Check this file `lib/fallback/src/jscam.as` for clear understanding
 
 ![angular2](https://bytebucket.org/archik/ng2-webcam/raw/fa43c0a740dc806ed53022b9fc440aba169ab6e1/media/tech.png)
 
