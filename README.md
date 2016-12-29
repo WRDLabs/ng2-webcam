@@ -4,7 +4,7 @@
 
 ## Screenshot
 
-![Screenshot](https://bitbucket.org/archik/ng2-webcam/src/fa43c0a740dc806ed53022b9fc440aba169ab6e1/media/screen.png)
+![Screenshot](https://bytebucket.org/archik/ng2-webcam/raw/c728ec3fd1e0008dc67873c20897427e9f5b0c0a/media/screen.png)
 
 ## Notes
 
@@ -75,7 +75,7 @@ const onSuccess = () => {};
 const onError = (err) => {};
 ```
 
-![angular2](https://bitbucket.org/archik/ng2-webcam/src/fa43c0a740dc806ed53022b9fc440aba169ab6e1/media/tech.png)
+![angular2](https://bytebucket.org/archik/ng2-webcam/raw/fa43c0a740dc806ed53022b9fc440aba169ab6e1/media/tech.png)
 
 ## [Credits](https://github.com/addyosmani/getUserMedia.js#credits)
 
