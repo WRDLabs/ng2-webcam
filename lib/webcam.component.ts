@@ -80,7 +80,7 @@ export class WebCamComponent implements OnInit, AfterViewInit {
         optionString = optionString + 'audio';
       }
 
-      container = this.element.nativeElement.querySelector('#webcam');
+      container = this.element.nativeElement.querySelector('#ng2-webcam');
       video = this.element.nativeElement.querySelector('video');
       video.autoplay = true;
       // Fix for ratio
