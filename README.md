@@ -4,7 +4,7 @@
 
 ## Screenshot
 
-![Screenshot](https://bytebucket.org/archik/ng2-webcam/raw/c728ec3fd1e0008dc67873c20897427e9f5b0c0a/media/screen.png)
+![Screenshot](https://bytebucket.org/archik/ng2-webcam/raw/0ccfb605f860ba5401b3afe902be251fcf0dd7ab/media/screen.png)
 
 ## Notes
 
