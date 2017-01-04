@@ -47,7 +47,7 @@ export default AppModule;
 <ng2-webcam [options]="options" [onSuccess]="onSuccess" [onError]="onError"></ng2-webcam>
 ```
 
-Below is a sample of options structure
++ Below is a sample of options structure
 
 ```javascript
 cont options = {
@@ -60,7 +60,7 @@ const onSuccess = (stream: MediaStream) => {};
 const onError = (err) => {};
 ```
 
-You can capture image form webcam using following example
++ You can capture image form webcam using following example
 ```javascript
 ...
 const video = <any>document.getElementsByTagName('video')[0];
@@ -148,8 +148,8 @@ onFallback(): void {
     FallbackDispatcher.implementExternal({
       onSave: (data) => {
         try {
-          let col = data.split(';'),
-            tmp = null;
+          let col = data.split(';');
+          let tmp = null;
 
           for (let i = 0; i < w; i++) {
             tmp = parseInt(col[i], 10);
