@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import FallbackDispatcher from './fallback/ts/fallback.dispatcher';
 
 /**
  * Component options structure interface
@@ -21,7 +22,7 @@ interface Options {
   selector: 'ng2-webcam',
   templateUrl: 'webcam.component.html'
 })
-export class WebCamComponent implements OnInit, AfterViewInit {
+class WebCamComponent implements OnInit, AfterViewInit {
   public videoSrc: any;
   public isSupportWebRTC: boolean;
   public isFallback: boolean;
@@ -43,6 +44,7 @@ export class WebCamComponent implements OnInit, AfterViewInit {
     || this.browser.mozGetUserMedia
     || this.browser.msGetUserMedia);
     this.isSupportWebRTC = !!this.browser.getUserMedia_;
+    // default options
     this.options.fallbackSrc = this.options.fallbackSrc || 'node_modules/ng2-webcam/lib/fallback/jscam_canvas_only.swf';
     this.options.fallbackMode = this.options.fallbackMode || 'callback';
     this.options.fallbackQuality = this.options.fallbackQuality || 85;
@@ -58,7 +60,7 @@ export class WebCamComponent implements OnInit, AfterViewInit {
 
   /**
    * On web camera using native browser api
-   * @returns {any}
+   * @returns {void}
    */
   onWebRTC(): any {
     if (this.options) {
@@ -96,8 +98,8 @@ export class WebCamComponent implements OnInit, AfterViewInit {
       video.width = this.options.width;
       video.height = this.options.height;
       video.autoplay = true;
-      container.appendChild(video);
 
+      // Promisify async callback's for angular2 change detection
       const promisifyGetUserMedia = () => {
         return new Promise<string>((resolve, reject) => {
           // first we try if getUserMedia supports the config object
@@ -117,11 +119,10 @@ export class WebCamComponent implements OnInit, AfterViewInit {
         });
       };
 
-      // Promisify async callback's for angular2 change detection
       promisifyGetUserMedia().then((stream) => {
         let webcamUrl = URL.createObjectURL(stream);
         this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(webcamUrl);
-        this.onSuccess(stream);
+        this.onSuccess(stream); // TODO stream :MediaStream
       }).catch((err) => {
         this.onError(err);
       });
@@ -132,44 +133,9 @@ export class WebCamComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Create fallback dispatcher and call onSuccess
-   * @param cam - Flash web camera instance
-   * @returns {any}
-   */
-  createFallbackDispatcher(cam): any {
-    const dispatcher = {
-      capture: function (x) {
-        try {
-          return cam.capture(x);
-        } catch (e) {
-        }
-      },
-      save: function (x) {
-        try {
-          return cam.save(x);
-        } catch (e) {
-        }
-      },
-      setCamera: function (x) {
-        try {
-          return cam.setCamera(x);
-        } catch (e) {
-        }
-      },
-      getCameraList: function () {
-        try {
-          return cam.getCameraList();
-        } catch (e) {
-        }
-      }
-    };
-    this.onSuccess(dispatcher);
-  }
-
-  /**
    * Add <param>'s into fallback object
    * @param cam - Flash web camera instance
-   * @returns {any}
+   * @returns {void}
    */
   addFallbackParams(cam: any): any {
     const paramFlashVars = document.createElement('param');
@@ -184,20 +150,20 @@ export class WebCamComponent implements OnInit, AfterViewInit {
 
     // if (this.browser.appVersion.indexOf('MSIE') > -1) {
     // if (isIE) {
-      cam.classid = 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000';
-      const paramMovie = document.createElement('param');
-      paramMovie.name = 'movie';
-      paramMovie.value = this.options.fallbackSrc;
-      cam.appendChild(paramMovie);
+    cam.classid = 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000';
+    const paramMovie = document.createElement('param');
+    paramMovie.name = 'movie';
+    paramMovie.value = this.options.fallbackSrc;
+    cam.appendChild(paramMovie);
     // } else {
-      cam.data = this.options.fallbackSrc;
+    cam.data = this.options.fallbackSrc;
     // }
   }
 
   /**
    * On web camera using flash fallback
    * .swf file is necessary
-   * @returns {any}
+   * @returns {void}
    */
   onFallback(): any {
     // Act as a plain getUserMedia shield if no fallback is required
@@ -207,12 +173,12 @@ export class WebCamComponent implements OnInit, AfterViewInit {
       const cam = self.element.nativeElement.querySelector('#XwebcamXobjectX');
       cam.width = self.options.width;
       cam.height = self.options.height;
-      
+
       this.addFallbackParams(cam);
 
       (function register(run) {
         if (cam.capture !== undefined) {
-          self.createFallbackDispatcher(cam);
+          self.onSuccess(new FallbackDispatcher(cam));
         } else if (run === 0) {
           self.onError(new Error('Flash movie not yet registered!'));
         } else {
@@ -228,7 +194,7 @@ export class WebCamComponent implements OnInit, AfterViewInit {
 
   /**
    * Start capturing video stream
-   * @returns {any}
+   * @returns {void}
    */
   startCapturingVideo(): any {
     if (this.isSupportWebRTC) {
