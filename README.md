@@ -21,7 +21,7 @@ npm install ng2-webcam --save
 
 Use webcam as a pure angular2 component
 
-1. Add component into your module
++ Add component into your module
 ```javascript
 import { WebCamComponent } from 'ng2-webcam';
 ...
@@ -42,7 +42,7 @@ class AppModule {
 }
 export default AppModule;
 ```
-2. Use in html markup
++ Use in html markup
 ```html
 <ng2-webcam [options]="options" [onSuccess]="onSuccess" [onError]="onError"></ng2-webcam>
 ```
