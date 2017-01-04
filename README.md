@@ -9,7 +9,8 @@
 ## Notes
 
 This component based on [getUserMedia.js Polyfill](https://github.com/addyosmani/getUserMedia.js).
-Pls, check original repository for clear understanding
+
+Please, check original repository for clear understanding
 
 
 ## Getting Started
@@ -55,7 +56,7 @@ cont options = {
   width: 500,
   height: 500
 };
-const onSuccess = () => {};
+const onSuccess = (stream: MediaStream) => {};
 const onError = (err) => {};
 ```
 
@@ -73,66 +74,128 @@ if (video) {
 ```
 
 ## Fallback (flash)
-Also You can extend options using flash fallback params
+
+Action script fallback provide the following API
+
+```
+interface FallbackDispatcher {
+  capture: Function;
+  save: Function;
+  setCamera: Function;
+  getCameraSize: Function;
+  getCameraList: Function;
+}
+```
+
+For correct communication with this script You have to implement following external callback interface
+
+```
+interface EventCallbacks {
+  debug: Function;
+  onCapture: Function;
+  onTick: Function;
+  onSave: Function;
+}
+```
+
+Below is a sample of fallback implementation
+
+```javascript
+import { FallbackDispatcher } from 'ng2-webcam'
+
+
+...
+
+
+cont options = {
+  audio: false,
+  video: true
+};
+const onSuccess = (flashplayer: MediaStream | FallbackDispatcher) => {
+  if (stream instanceof FallbackDispatcher) {
+    this.flashPlayer = <FallbackDispatcher>stream;
+    this.onFallback();
+  }
+};
+const onError = (err) => {
+  console.log(err);
+};
+
+
+...
+
+
+/**
+ * Implement fallback external interface
+ */
+onFallback(): void {
+  const self = this;
+  const canvas = <any>document.getElementsByTagName('canvas')[0];
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const size = self.flashPlayer.getCameraSize();
+    const w = size.width;
+    const h = size.height;
+    const externData = {
+      imgData: ctx.getImageData(0, 0, w, h),
+      pos: 0
+    };
+
+    canvas.width = w;
+    canvas.height = h;
+    ctx.clearRect(0, 0, w, h);
+
+    FallbackDispatcher.implementExternal({
+      onSave: (data) => {
+        try {
+          let col = data.split(';'),
+            tmp = null;
+
+          for (let i = 0; i < w; i++) {
+            tmp = parseInt(col[i], 10);
+            externData.imgData.data[externData.pos + 0] = (tmp >> 16) & 0xff;
+            externData.imgData.data[externData.pos + 1] = (tmp >> 8) & 0xff;
+            externData.imgData.data[externData.pos + 2] = tmp & 0xff;
+            externData.imgData.data[externData.pos + 3] = 0xff;
+            externData.pos += 4;
+          }
+
+          if (externData.pos >= 4 * w * h) {
+            ctx.putImageData(externData.imgData, 0, 0);
+            externData.pos = 0;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      },
+      debug: (tag, message) => {
+        console.log(tag, message);
+      },
+      onCapture: () => {
+        self.flashPlayer.save();
+      },
+      onTick: (time) => {
+        // do nothing
+      }
+    });
+  }
+}
+```
+
+Also You can extend options using specific flash fallback params
 
 ```javascript
 cont options = {
   audio: false,
   video: true,
-  width: 500,
-  height: 500,
+  width: 320, // by default, need remake .swf for other size
+  height: 240, // by default, need remake .swf for other size
   fallbackMode: 'callback',
-  fallbackSrc: '/node_modules/ng2-webcam/lib/fallback/jscam_canvas_only.swf',
+  fallbackSrc: '/node_modules/ng2-webcam/lib/fallback/jscam_canvas_only.swf', // you can put your fallback swf
   fallbackQuality: 85
 };
-const onSuccess = (flashplayer) => {
-  self.flashplayer = flashplayer;
-};
-const onError = (err) => {};
 ```
 
-Fallback implemented using ActionScript and for communication with this script You have to implement following external interface
-```javascript
-window.webcam = {
-  // .as script logging
-  debug: function (a, b) {
-     console.log(a, b);
-  },
-  // Capture event callback
-  onCapture: function () {
-    self.flashplayer.save();
-  },
-  // Before setInterval callback
-  onTick: function () {},
-  // Save event callback
-  onSave: function (data) {
-    try {
-      const win = <any>window;
-      let col = data.split(';'),
-        tmp = null,
-        w = self.options.width,
-        h = self.options.height;
-      for (let i = 0; i < w; i++) {
-        tmp = parseInt(col[i], 10);
-        win.app.imgData.data[win.app.pos + 0] = (tmp >> 16) & 0xff;
-        win.app.imgData.data[win.app.pos + 1] = (tmp >> 8) & 0xff;
-        win.app.imgData.data[win.app.pos + 2] = tmp & 0xff;
-        win.app.imgData.data[win.app.pos + 3] = 0xff;
-        win.app.pos += 4;
-      }
-
-      if (win.app.pos >= 4 * w * h) {
-        win.app.ctx.putImageData(win.app.imgData, 0, 0);
-        win.app.pos = 0;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-};
-
-self.flashplayer.capture();
-```
 Check this file `lib/fallback/src/jscam.as` for clear understanding
 
 ![angular2](https://bytebucket.org/archik/ng2-webcam/raw/fa43c0a740dc806ed53022b9fc440aba169ab6e1/media/tech.png)
