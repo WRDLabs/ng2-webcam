@@ -1,0 +1,11 @@
+<div id="app-component">
+  <div class="webcam">
+    <ng2-webcam [options]="options" [onSuccess]="onSuccess" [onError]="onError"></ng2-webcam>
+  </div>
+  <div>
+    <canvas></canvas>
+  </div>
+  <div>
+    <button (click)="capture()">Capture</button>
+  </div>
+</div>

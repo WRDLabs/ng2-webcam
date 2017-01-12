@@ -68,7 +68,7 @@ class WebCamComponent implements OnInit, AfterViewInit {
       // an string (we will try both)
       let optionObject = {audio: false, video: false};
       let optionString = '';
-      let container, video, ow, oh;
+      let container: any, video: any, ow: any, oh: any;
 
       if (this.options.video === true) {
         optionObject.video = true;
@@ -105,13 +105,13 @@ class WebCamComponent implements OnInit, AfterViewInit {
           // first we try if getUserMedia supports the config object
           try {
             // try object
-            this.browser.getUserMedia_(optionObject, (stream) => resolve(stream), (err) => reject(err));
+            this.browser.getUserMedia_(optionObject, (stream: any) => resolve(stream), (err: any) => reject(err));
           } catch (e) {
             // option object fails
             try {
               // try string syntax
               // if the config object failes, we try a config string
-              this.browser.getUserMedia_(optionString, (stream) => resolve(stream), (err) => reject(err));
+              this.browser.getUserMedia_(optionString, (stream: any) => resolve(stream), (err: any) => reject(err));
             } catch (e2) {
               return reject(new Error('Both configs failed. Neither object nor string works'));
             }

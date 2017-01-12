@@ -198,6 +198,25 @@ cont options = {
 
 Check this file `lib/fallback/src/jscam.as` for clear understanding
 
+## Example and Tests
+
+You can check example using following npm commands:
+```
+cd ng2-webcam
+npm i
+npm start
+```
+
+For tests:
+```
+cd ng2-webcam
+npm i
+npm run lint
+npm test
+npm run e2e
+
+```
+
 ![angular2](https://bytebucket.org/archik/ng2-webcam/raw/fa43c0a740dc806ed53022b9fc440aba169ab6e1/media/tech.png)
 
 ## [Credits](https://github.com/addyosmani/getUserMedia.js#credits)

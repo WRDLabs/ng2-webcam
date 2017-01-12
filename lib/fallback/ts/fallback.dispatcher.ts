@@ -41,7 +41,7 @@ class FallbackDispatcher {
     this.cam = camera;
   }
 
-  capture(x?) {
+  capture(x?: any) {
     try {
       return this.cam.capture(x);
     } catch (e) {
@@ -49,7 +49,7 @@ class FallbackDispatcher {
     }
   }
 
-  save(x?) {
+  save(x?: any) {
     try {
       return this.cam.save(x);
     } catch (e) {
@@ -57,7 +57,7 @@ class FallbackDispatcher {
     }
   }
 
-  setCamera(x?) {
+  setCamera(x?: any) {
     try {
       return this.cam.setCamera(x);
     } catch (e) {
