@@ -222,7 +222,7 @@ npm run e2e
 ## [Credits](https://github.com/addyosmani/getUserMedia.js#credits)
 
 ## Spec references
-
+* [MediaDevices](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices)
 * [getUserMedia()](https://w3c.github.io/mediacapture-main/getusermedia.html)
 * [WebRTC 1.0](http://w3c.github.io/webrtc-pc/)
 
