@@ -1,4 +1,4 @@
 <div id="ng2-webcam">
-    <video *ngIf="isSupportWebRTC" [src]="videoSrc"></video>
-    <object *ngIf="isFallback" id="XwebcamXobjectX"></object>
+    <video *ngIf="isSupportWebRTC" [src]="videoSrc">Video stream not available</video>
+    <object *ngIf="isFallback" id="XwebcamXobjectX">Video stream not available</object>
 </div>

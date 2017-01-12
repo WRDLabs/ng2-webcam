@@ -8,7 +8,7 @@
 
 ## Notes
 
-This component based on [getUserMedia.js Polyfill](https://github.com/addyosmani/getUserMedia.js).
+This component based on [MediaDevices](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices)  and [getUserMedia.js Polyfill](https://github.com/addyosmani/getUserMedia.js).
 
 Please, check original repository for clear understanding
 

@@ -1,7 +1,7 @@
 {
   "name": "ng2-webcam",
-  "version": "1.1.2",
-  "description": "Angular2 webcam component. Based on getUserMedia.js ",
+  "version": "1.2.0",
+  "description": "Angular2 webcam component. Based on MediaDevices and getUserMedia.js ",
   "main": "index.ts",
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.js --hot --progress --colors --port 3000",
