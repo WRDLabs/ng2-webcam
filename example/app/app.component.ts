@@ -20,7 +20,8 @@ class AppComponent {
       video: true,
       width: 320,
       height: 240,
-      fallbackQuality: 200
+      fallbackQuality: 200,
+      fallbackSrc: 'lib/fallback/jscam_canvas_only.swf'
     };
     this.onSuccess = (stream: any) => {
       if (stream instanceof FallbackDispatcher) {

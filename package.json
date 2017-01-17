@@ -1,6 +1,6 @@
 {
   "name": "ng2-webcam",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Angular2 webcam component. Based on MediaDevices and getUserMedia.js ",
   "main": "index.ts",
   "scripts": {
