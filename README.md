@@ -73,6 +73,18 @@ if (video) {
 ...
 ```
 
+## Tablet and Phone
+On devices you can switch camera modes using following option:
+
+```
+cont options = {
+  cameraType: 'front' // or 'back'
+};
+```
+
+Tested for tablet (Android 4.4.2 GT-N5110) and phone (Android 4.1.2 GT-I8268)
+
+
 ## Fallback (flash)
 
 Action script fallback provide the following API

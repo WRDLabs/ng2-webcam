@@ -7,6 +7,7 @@ import FallbackDispatcher from './fallback/ts/fallback.dispatcher';
  */
 interface Options {
   video: boolean | any;
+  cameraType: string;
   audio: boolean;
   width: number;
   height: number;
@@ -69,7 +70,7 @@ class WebCamComponent implements OnInit, AfterViewInit {
         });
       }
     }
-
+    
     this.isSupportWebRTC = !!(this.browser.mediaDevices && this.browser.mediaDevices.getUserMedia);
     // default options
     this.options.fallbackSrc = this.options.fallbackSrc || 'node_modules/ng2-webcam/lib/fallback/jscam_canvas_only.swf';
@@ -77,6 +78,7 @@ class WebCamComponent implements OnInit, AfterViewInit {
     this.options.fallbackQuality = this.options.fallbackQuality || 85;
     this.options.width = this.options.width || 320;
     this.options.height = this.options.height || 240;
+    this.options.cameraType = this.options.cameraType  || 'front';
     // flash fallback detection
     this.isFallback = !this.isSupportWebRTC && !!this.options.fallbackSrc;
   }
@@ -92,10 +94,11 @@ class WebCamComponent implements OnInit, AfterViewInit {
   onWebRTC(): any {
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices
     if (this.browser.mediaDevices.enumerateDevices && this.options.video) {
+      const cameraType = this.options.cameraType;
       this.browser.mediaDevices.enumerateDevices().then((devices) => {
         devices.forEach((device: MediaDevice) => {
           if (device && device.kind === 'videoinput') {
-            if (device.label.toLowerCase().search('back') > -1) {
+            if (device.label.toLowerCase().search(cameraType) > -1) {
               this.options.video = {deviceId: {exact: device.deviceId}, facingMode: 'environment'};
             }
           }
@@ -163,6 +166,10 @@ class WebCamComponent implements OnInit, AfterViewInit {
               this.browser.mediaDevices.getUserMedia(optionObject)
                 .then((stream: any) => resolve(stream))
                 .catch((strErr: any) => {
+
+                  console.error(objErr);
+                  console.error(strErr);
+
                   reject(new Error('Both configs failed. Neither object nor string works'));
               });
           });
