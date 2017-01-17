@@ -62,7 +62,7 @@ class WebCamComponent implements OnInit, AfterViewInit {
     // Some browsers partially implement mediaDevices. We can't just assign an object
     // with getUserMedia as it would overwrite existing properties.
     // Here, we will just add the getUserMedia property if it's missing.
-    if ((this.browser.mediaDevices.getUserMedia === undefined) && !!this.browser.getUserMedia_) {
+    if ((this.browser.mediaDevices && this.browser.mediaDevices.getUserMedia === undefined) && !!this.browser.getUserMedia_) {
       this.browser.mediaDevices.getUserMedia = (constraints) => {
 
         return new Promise((resolve, reject) => {
