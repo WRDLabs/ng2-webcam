@@ -89,5 +89,8 @@
     "webpack": "1.13.0",
     "webpack-dev-server": "1.14.1",
     "webpack-merge": "0.14.0"
+  },
+  "publishConfig":{
+    "registry":"https://nexus.wrd.hu/repository/npm/"
   }
 }
