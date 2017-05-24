@@ -1,5 +1,5 @@
 {
-  "name": "ng2-webcam-wrd",
+  "name": "@wrd/ng2-webcam",
   "version": "1.2.4",
   "description": "Angular2 webcam component. Based on MediaDevices and getUserMedia.js ",
   "main": "index.ts",
