@@ -1,7 +1,9 @@
+import { Component} from '@angular/core';
+
 /**
  * Action script fallback interface
  */
-interface ASCamera {
+declare interface ASCamera {
   capture: Function;
   save: Function;
   setCamera: Function;
@@ -23,7 +25,7 @@ interface EventCallbacks {
 /**
  * Adobe flash fallback dispatcher
  */
-class FallbackDispatcher {
+export class FallbackDispatcher {
 
   private cam: ASCamera;
 

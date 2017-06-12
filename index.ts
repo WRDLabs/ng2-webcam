@@ -5,8 +5,5 @@ import FallbackDispatcher from './lib/fallback/ts/fallback.dispatcher';
  * @description
  * Entry point from which you should import webcam component
  */
-export {
-  WebCamComponent,
-  FallbackDispatcher
-};
 
+export declare class WebCamModule{};

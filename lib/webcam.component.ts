@@ -32,7 +32,7 @@ interface MediaDevice {
   selector: 'ng2-webcam',
   templateUrl: 'webcam.component.html'
 })
-class WebCamComponent implements OnInit, AfterViewInit {
+export class WebCamComponent implements OnInit, AfterViewInit {
   public videoSrc: any;
   public isSupportWebRTC: boolean;
   public isFallback: boolean;
